@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "784935028478",
+    "project_id": "fir-auth-55f6c",
+    "storage_bucket": "fir-auth-55f6c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:784935028478:android:5f2b7b9c37b60131ddc7af",
+        "android_client_info": {
+          "package_name": "com.rivvana.firebaseauth"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "784935028478-s4ka3eftne8n2rrjj0gla2mua3v9ovmg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rivvana.firebaseauth",
+            "certificate_hash": "1ac76bd1592d865971f46f75655af1c4480ab461"
+          }
+        },
+        {
+          "client_id": "784935028478-k5hcj87te18dchjpjagceqlnud9m9dnn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4l_vMK9noXkyT_iQEQ0v7r2Pdutd1o1A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "784935028478-k5hcj87te18dchjpjagceqlnud9m9dnn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
