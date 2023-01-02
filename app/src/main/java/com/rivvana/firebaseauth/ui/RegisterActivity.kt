@@ -4,9 +4,12 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Patterns
+import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
+import com.rivvana.firebaseauth.MainActivity
 import com.rivvana.firebaseauth.R
 import com.rivvana.firebaseauth.databinding.ActivityRegisterBinding
+import kotlinx.coroutines.MainScope
 
 class RegisterActivity : AppCompatActivity() {
     lateinit var auth: FirebaseAuth
@@ -43,7 +46,25 @@ class RegisterActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            if (password.length < 5){
+                binding.etPasswordRegister.error = "Password minimal 5 karakter"
+                binding.etPasswordRegister.requestFocus()
+                return@setOnClickListener
+            }
 
+            RegisterFirebase(email,password)
         }
+    }
+
+    private fun RegisterFirebase(email: String, password: String) {
+        auth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this){
+                if (it.isSuccessful){
+                    Toast.makeText(this, "Register Success", Toast.LENGTH_SHORT).show()
+                    startActivity(Intent(this, MainActivity::class.java))
+                } else {
+                    Toast.makeText(this, "${it.exception?.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
     }
 }
