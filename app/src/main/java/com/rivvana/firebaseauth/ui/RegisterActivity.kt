@@ -19,7 +19,7 @@ class RegisterActivity : AppCompatActivity() {
         binding = ActivityRegisterBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
-
+        auth = FirebaseAuth.getInstance()
         binding.tvLogin.setOnClickListener {
             startActivity(Intent(this, LoginActivity::class.java))
         }
@@ -61,7 +61,7 @@ class RegisterActivity : AppCompatActivity() {
             .addOnCompleteListener(this){
                 if (it.isSuccessful){
                     Toast.makeText(this, "Register Success", Toast.LENGTH_SHORT).show()
-                    startActivity(Intent(this, MainActivity::class.java))
+                    startActivity(Intent(this, LoginActivity::class.java))
                 } else {
                     Toast.makeText(this, "${it.exception?.message}", Toast.LENGTH_SHORT).show()
                 }
