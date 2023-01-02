@@ -47,6 +47,19 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    public override fun onStart() {
+        super.onStart()
+        // Check if user is signed in (non-null) and update UI accordingly.
+        val currentUser = auth.currentUser
+        if(currentUser != null){
+            reload();
+        }
+    }
+
+    private fun reload() {
+        startActivity(Intent(this, MainActivity::class.java))
+    }
+
     private fun LoginFirebase(email: String, password: String) {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this){
