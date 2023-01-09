@@ -3,8 +3,15 @@ package com.rivvana.firebaseauth.ui
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.util.Patterns
 import android.widget.Toast
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.rivvana.firebaseauth.MainActivity
 import com.rivvana.firebaseauth.databinding.ActivityLoginBinding
@@ -12,13 +19,26 @@ import com.rivvana.firebaseauth.databinding.ActivityLoginBinding
 class LoginActivity : AppCompatActivity() {
     lateinit var auth: FirebaseAuth
     lateinit var binding: ActivityLoginBinding
+    lateinit var mGoogleSignInClient: GoogleSignInClient
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken("http://798514186756-8dv8n40165ae56nnfnu9s4qv0e8rjbj8.apps.googleusercontent.com/")
+            .requestEmail()
+            .build()
+
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
+
         auth = FirebaseAuth.getInstance()
         binding.tvRegister.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
+        }
+
+        binding.btnLoginGoogle.setOnClickListener{
+            signInGoogle()
         }
 
         binding.btnLogin.setOnClickListener{
@@ -47,6 +67,46 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == RC_SIGN_IN){
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            handleSignInResult(task)
+        }
+    }
+
+    private fun handleSignInResult(completeTask: Task<GoogleSignInAccount>) {
+        try {
+            val account = completeTask.getResult(
+                ApiException::class.java
+            )
+            val googleId = account?.id ?: ""
+            Log.i("Google ID",googleId)
+            val googleFirstName = account?.givenName ?: ""
+            Log.i("Google First Name", googleFirstName)
+            val googleLastName = account?.familyName ?: ""
+            Log.i("Google Last Name", googleLastName)
+            val googleEmail = account?.email ?: ""
+            Log.i("Google Email", googleEmail)
+            val googleProfilePicURL = account?.photoUrl.toString()
+            Log.i("Google Profile Pic URL", googleProfilePicURL)
+            val googleIdToken = account?.idToken ?: ""
+            Log.i("Google ID Token", googleIdToken)
+        } catch (e: ApiException){
+            Log.e(
+                "failed code=", e.statusCode.toString()
+            )
+        }
+    }
+
+    private fun signInGoogle() {
+        val signInIntent = mGoogleSignInClient.signInIntent
+        startActivityForResult(
+            signInIntent, RC_SIGN_IN
+        )
+        startActivity(Intent(this, MainActivity::class.java))
+    }
+
     public override fun onStart() {
         super.onStart()
         // Check if user is signed in (non-null) and update UI accordingly.
@@ -70,5 +130,9 @@ class LoginActivity : AppCompatActivity() {
                     Toast.makeText(this, "${it.exception?.message}", Toast.LENGTH_SHORT).show()
                 }
             }
+    }
+
+    companion object {
+        val RC_SIGN_IN = 9001
     }
 }
