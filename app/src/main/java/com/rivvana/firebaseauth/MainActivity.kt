@@ -1,13 +1,12 @@
 package com.rivvana.firebaseauth
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.rivvana.firebaseauth.adapter.ViewPagerAdapter
 import com.rivvana.firebaseauth.databinding.ActivityMainBinding
-import com.rivvana.firebaseauth.ui.LoginActivity
+import com.rivvana.firebaseauth.fragment.HomeFragment
+import com.rivvana.firebaseauth.fragment.UserFragment
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
@@ -18,6 +17,18 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         auth = FirebaseAuth.getInstance()
+        setupTab()
+    }
 
+    private fun setupTab() {
+        val adapter = ViewPagerAdapter(supportFragmentManager)
+        adapter.addFragment(HomeFragment(), "Home")
+        adapter.addFragment(UserFragment(), "User")
+
+        binding.viewPager.adapter = adapter
+        binding.tabs.setupWithViewPager(binding.viewPager)
+
+        binding.tabs.getTabAt(0)!!.setIcon(R.drawable.ic_home)
+        binding.tabs.getTabAt(1)!!.setIcon(R.drawable.ic_person)
     }
 }
