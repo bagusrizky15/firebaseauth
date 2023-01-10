@@ -6,12 +6,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.rivvana.firebaseauth.R
 import com.rivvana.firebaseauth.databinding.FragmentUserBinding
 import com.rivvana.firebaseauth.ui.LoginActivity
 
 class UserFragment : Fragment() {
+    lateinit var mGoogleSignInClient: GoogleSignInClient
     private var _binding: FragmentUserBinding? = null
     lateinit var auth: FirebaseAuth
 
@@ -37,6 +41,13 @@ class UserFragment : Fragment() {
         auth = FirebaseAuth.getInstance()
         var user = auth.currentUser
 
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken("http://798514186756-8dv8n40165ae56nnfnu9s4qv0e8rjbj8.apps.googleusercontent.com/")
+            .requestEmail()
+            .build()
+
+        mGoogleSignInClient = context?.let { GoogleSignIn.getClient(it, gso) }!!
+
         if (user != null){
             binding.etEmailUser.setText(user.email)
         }
@@ -47,6 +58,10 @@ class UserFragment : Fragment() {
     }
 
     private fun logoutBtn() {
+        mGoogleSignInClient.signOut().addOnCompleteListener{
+            startActivity(Intent(context, LoginActivity::class.java))
+            activity?.finish()
+        }
         auth = FirebaseAuth.getInstance()
         auth.signOut()
         startActivity(Intent(context, LoginActivity::class.java))

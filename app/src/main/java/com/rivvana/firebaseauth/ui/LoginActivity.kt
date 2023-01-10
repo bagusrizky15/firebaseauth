@@ -13,6 +13,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 import com.rivvana.firebaseauth.MainActivity
 import com.rivvana.firebaseauth.databinding.ActivityLoginBinding
 
@@ -20,6 +21,7 @@ class LoginActivity : AppCompatActivity() {
     lateinit var auth: FirebaseAuth
     lateinit var binding: ActivityLoginBinding
     lateinit var mGoogleSignInClient: GoogleSignInClient
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
@@ -31,8 +33,8 @@ class LoginActivity : AppCompatActivity() {
             .build()
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
-
         auth = FirebaseAuth.getInstance()
+
         binding.tvRegister.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
         }
@@ -80,22 +82,27 @@ class LoginActivity : AppCompatActivity() {
             val account = completeTask.getResult(
                 ApiException::class.java
             )
-            val googleId = account?.id ?: ""
-            Log.i("Google ID",googleId)
-            val googleFirstName = account?.givenName ?: ""
-            Log.i("Google First Name", googleFirstName)
-            val googleLastName = account?.familyName ?: ""
-            Log.i("Google Last Name", googleLastName)
-            val googleEmail = account?.email ?: ""
-            Log.i("Google Email", googleEmail)
-            val googleProfilePicURL = account?.photoUrl.toString()
-            Log.i("Google Profile Pic URL", googleProfilePicURL)
-            val googleIdToken = account?.idToken ?: ""
-            Log.i("Google ID Token", googleIdToken)
+            if (account != null){
+                UpdateUI(account)
+            }
         } catch (e: ApiException){
-            Log.e(
-                "failed code=", e.statusCode.toString()
-            )
+            Toast.makeText(this, e.toString(),Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun UpdateUI(account: GoogleSignInAccount) {
+        val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+
+        auth.signInWithCredential(credential).addOnCompleteListener{
+            task ->
+                if (task.isSuccessful){
+                    SavedPreference.setEmail(this, account.email.toString())
+                    SavedPreference.setUsername(this, account.displayName.toString())
+
+                    val intent = Intent(this, MainActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }
         }
     }
 
@@ -104,7 +111,6 @@ class LoginActivity : AppCompatActivity() {
         startActivityForResult(
             signInIntent, RC_SIGN_IN
         )
-        startActivity(Intent(this, MainActivity::class.java))
     }
 
     public override fun onStart() {
@@ -113,6 +119,10 @@ class LoginActivity : AppCompatActivity() {
         val currentUser = auth.currentUser
         if(currentUser != null){
             reload();
+        }
+        if (GoogleSignIn.getLastSignedInAccount(this)!=null){
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
         }
     }
 
