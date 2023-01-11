@@ -6,13 +6,11 @@ import android.os.Bundle
 import android.util.Patterns
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
-import com.rivvana.firebaseauth.MainActivity
-import com.rivvana.firebaseauth.R
 import com.rivvana.firebaseauth.databinding.ActivityRegisterBinding
-import kotlinx.coroutines.MainScope
 
 class RegisterActivity : AppCompatActivity() {
-    lateinit var auth: FirebaseAuth
+    private lateinit var auth: FirebaseAuth
+
     lateinit var binding: ActivityRegisterBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
