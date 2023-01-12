@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "784935028478-3us0ac0hq6flq7pd5cs7bnf2tgsass1f.apps.googleusercontent.com",
+          "client_id": "784935028478-seakji4mf54vui4c91i19sa11bo0kglr.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.rivvana.firebaseauth",
-            "certificate_hash": "1ac76bd1592d865971f46f75655af1c4480ab461"
+            "certificate_hash": "36ee1e14282e44368725555da49014324bf906ca"
           }
         },
         {
