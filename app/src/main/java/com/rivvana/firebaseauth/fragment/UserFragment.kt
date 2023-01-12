@@ -84,7 +84,7 @@ class UserFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQ_CAM && requestCode == RESULT_OK){
             val imgBitmap = data?.extras?.get("data") as Bitmap
-            uploadImgToFirebase()
+            uploadImgToFirebase(imgBitmap)
         }
     }
 
