@@ -15,7 +15,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
-import com.rivvana.firebaseauth.R
 import com.rivvana.firebaseauth.databinding.FragmentUserBinding
 import com.rivvana.firebaseauth.ui.LoginActivity
 import java.io.ByteArrayOutputStream
